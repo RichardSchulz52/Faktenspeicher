@@ -1,11 +1,12 @@
-import pandas as pd
+import os
 import sqlite3
 from sqlite3 import Cursor
 
+import pandas as pd
+
 
 def save_line(text_, link_, extra_text_):
-    con = sqlite3.connect("info.db")
-    cur = con.cursor()
+    con, cur = open_db()
     info_table(cur, con)
     cur.execute(f"INSERT INTO information (text, link, extra_text) VALUES ('{text_}', '{link_}', '{extra_text_}')")
     con.commit()
@@ -24,9 +25,7 @@ def info_table(cur, con):
 
 
 def search(text_field):
-    con = sqlite3.connect("info.db")
-    cur: Cursor = con.cursor()
-    info_table(cur, con)
+    con, cur = open_db()
     data = cur.execute(f"""
         SELECT text, link, extra_text FROM information 
         WHERE text like '%{text_field}%'
@@ -34,5 +33,16 @@ def search(text_field):
     """).fetchall()
     frame = pd.DataFrame(data)
     if not frame.empty:
-        frame.rename(columns={frame.columns[0]: 'Fakt', frame.columns[1]: 'Beweis', frame.columns[2]: 'Erläuterung'}, inplace=True)
+        frame.rename(columns={frame.columns[0]: 'Fakt', frame.columns[1]: 'Beweis', frame.columns[2]: 'Erläuterung'},
+                     inplace=True)
+    cur.close()
+    con.close()
     return frame
+
+
+def open_db():
+    db_path = os.environ.get("database_path", "info.db")
+    con = sqlite3.connect(db_path)
+    cur: Cursor = con.cursor()
+    info_table(cur, con)
+    return con, cur

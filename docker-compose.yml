@@ -1,0 +1,16 @@
+version: '1.2'
+
+services:
+  faktenspeicher:
+    container_name: faktenspeicher
+    build: .
+    image: faktenspeicher:latest
+    volumes:
+      - facts_data:/usr/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - 8501:8501
+
+volumes:
+  facts_data:

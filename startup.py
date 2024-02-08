@@ -2,6 +2,7 @@
 
 import yaml
 import os
+import subprocess
 
 user_yaml = 'user.yaml'
 with open(user_yaml, 'a+') as f:
@@ -14,4 +15,4 @@ with open(user_yaml, 'a+') as f:
 
     yaml.dump(doc, f)
 
-
+subprocess.run(["streamlit", "run", "./Search.py"])
