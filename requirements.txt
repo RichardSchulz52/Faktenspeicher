@@ -3,4 +3,4 @@ pandas
 streamlit-authenticator
 PyYAML
 validators
-psycopg2
+psycopg2-binary
