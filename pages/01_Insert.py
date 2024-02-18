@@ -3,6 +3,7 @@ import repo
 import validators
 
 repo = repo.Repository()
+repo.open_db()
 
 
 def insert():

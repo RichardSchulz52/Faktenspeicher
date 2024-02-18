@@ -3,6 +3,7 @@ import streamlit as st
 import repo
 
 repo = repo.Repository()
+repo.open_db()
 
 st.set_page_config(
     page_title="Faktenspeicher",
