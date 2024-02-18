@@ -9,6 +9,8 @@ services:
       - facts_data:/usr/data
     environment:
       - PYTHONUNBUFFERED=1
+      - admin_login=$admin_login
+      - admin_password=$admin_password
     ports:
       - 8501:8501
 
