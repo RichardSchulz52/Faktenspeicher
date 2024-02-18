@@ -2,6 +2,8 @@ import streamlit as st
 import repo
 import validators
 
+repo = repo.Repository()
+
 
 def insert():
     if validators.url(

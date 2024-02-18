@@ -5,14 +5,15 @@ services:
     container_name: faktenspeicher
     build: .
     image: faktenspeicher:latest
-    volumes:
-      - facts_data:/usr/data
     environment:
       - PYTHONUNBUFFERED=1
       - admin_login=$admin_login
       - admin_password=$admin_password
+      - db_host=$db_host
+      - db_port=$db_port
+      - db_name=$db_name
+      - db_user=$db_user
+      - db_password=$db_password
+
     ports:
       - 8501:8501
-
-volumes:
-  facts_data:
