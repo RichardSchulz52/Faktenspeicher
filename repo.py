@@ -24,7 +24,7 @@ class Repository:
     def info_table(self):
         self.cur.execute("CREATE SCHEMA IF NOT EXISTS faktenspeicher")
         self.cur.execute("""
-                CREATE TABLE IF NOT EXISTS faktenspeicher.fakten (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                CREATE TABLE IF NOT EXISTS faktenspeicher.fakten (id SERIAL,
                                                         text varchar(2000), 
                                                         link varchar(2000),
                                                         extra_text varchar(2000));
