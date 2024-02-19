@@ -18,7 +18,7 @@ class Repository:
 
     def save_line(self, text_, link_, extra_text_):
         self.cur.execute(
-            f"INSERT INTO faktenspeicher (text, link, extra_text) VALUES ('{text_}', '{link_}', '{extra_text_}')")
+            f"INSERT INTO faktenspeicher.faktenspeicher (text, link, extra_text) VALUES ('{text_}', '{link_}', '{extra_text_}')")
         self.con.commit()
 
     def info_table(self):
@@ -33,7 +33,7 @@ class Repository:
 
     def search(self, text_field):
         data = self.cur.execute(f"""
-            SELECT text, link, extra_text FROM fakten 
+            SELECT text, link, extra_text FROM faktenspeicher.fakten 
             WHERE text like '%{text_field}%'
             ORDER BY id DESC 
         """).fetchall()
