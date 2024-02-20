@@ -18,7 +18,7 @@ class Repository:
 
     def save_line(self, text_, link_, extra_text_):
         self.cur.execute(
-            f"INSERT INTO faktenspeicher.faktenspeicher (text, link, extra_text) VALUES ('{text_}', '{link_}', '{extra_text_}')")
+            f"INSERT INTO faktenspeicher.fakten (text, link, extra_text) VALUES ('{text_}', '{link_}', '{extra_text_}')")
         self.con.commit()
 
     def info_table(self):
