@@ -32,11 +32,15 @@ class Repository:
         self.con.commit()
 
     def search(self, text_field):
-        data = self.cur.execute(f"""
+        exe = self.cur.execute(f"""
             SELECT text, link, extra_text FROM faktenspeicher.fakten 
             WHERE text like '%{text_field}%'
             ORDER BY id DESC 
-        """).fetchall()
+        """)
+        if exe is not None:
+            data = exe.fetchall()
+        else:
+            data = []
         frame = pd.DataFrame(data)
         if not frame.empty:
             frame.rename(

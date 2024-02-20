@@ -2,14 +2,14 @@ import streamlit as st
 import repo
 import validators
 
-repo = repo.Repository()
-repo.open_db()
+db_repo = repo.Repository()
+db_repo.open_db()
 
 
 def insert():
     if validators.url(
             st.session_state.url_field) and st.session_state.url_field.strip() and st.session_state.text_field.strip():
-        repo.save_line(st.session_state.text_field, st.session_state.url_field, st.session_state.extra_text_field)
+        db_repo.save_line(st.session_state.text_field, st.session_state.url_field, st.session_state.extra_text_field)
         st.write("Added!")
     else:
         st.write("Malformed Input!")

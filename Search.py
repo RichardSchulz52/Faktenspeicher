@@ -2,19 +2,19 @@ import streamlit as st
 
 import repo
 
-repo = repo.Repository()
-repo.open_db()
+db_repo = repo.Repository()
+db_repo.open_db()
 
 st.set_page_config(
     page_title="Faktenspeicher",
 )
 
 if 'data' not in st.session_state:
-    st.session_state.data = repo.search("")
+    st.session_state.data = db_repo.search("")
 
 
 def search():
-    st.session_state.data = repo.search(st.session_state.search_input)
+    st.session_state.data = db_repo.search(st.session_state.search_input)
 
 
 st.markdown("""
