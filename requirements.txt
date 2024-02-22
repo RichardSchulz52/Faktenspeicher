@@ -4,4 +4,4 @@ streamlit-authenticator
 PyYAML
 validators
 psycopg2-binary
-sqalchemy
+SQLAlchemy

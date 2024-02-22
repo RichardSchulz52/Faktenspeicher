@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 import sqlalchemy
+from sqlalchemy import URL
 
 
 class Repository:
@@ -18,12 +19,12 @@ class Repository:
 
     def save_line(self, text_, link_, extra_text_):
         line = pd.DataFrame({'text': [text_], 'link': [link_], 'extra_text': [extra_text_]})
-        line.to_sql("faktenspeicher.faktenspeicher", self.con, if_exists="append")
+        line.to_sql("fakten", self.con, if_exists="append", schema='faktenspeicher', index=False)
 
     def search(self, text_field):
         frame = pd.read_sql(f"""
             SELECT text, link, extra_text FROM faktenspeicher.fakten 
-            WHERE text like '%{text_field}%'
+            WHERE text like '%%{text_field}%%'
             ORDER BY id DESC 
         """, self.con)
         if not frame.empty:
@@ -36,11 +37,12 @@ class Repository:
         self.con = self.get_engine()
 
     def get_engine(self) -> sqlalchemy.engine:
-        pg_connection_dict = {
-            'dbname': self.dbname,
-            'user': self.user,
-            'password': self.password,
-            'port': self.port,
-            'host': self.host
-        }
-        return sqlalchemy.create_engine(**pg_connection_dict)
+        url_object = URL.create(
+            "postgresql+psycopg2",
+            username=self.user,
+            password=self.password,
+            host=self.host,
+            database=self.dbname,
+            port=int(self.port)
+        )
+        return sqlalchemy.create_engine(url_object)
