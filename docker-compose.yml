@@ -3,6 +3,7 @@ version: '1.3'
 services:
   faktenspeicher:
     container_name: faktenspeicher
+    pull_policy: build
     build: .
     image: faktenspeicher:latest
     environment:
