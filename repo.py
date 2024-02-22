@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 import psycopg2
+import sqlalchemy
 
 
 class Repository:
@@ -17,27 +18,15 @@ class Repository:
         self.password = os.environ['db_password']
 
     def save_line(self, text_, link_, extra_text_):
-        self.cur.execute(
-            f"INSERT INTO faktenspeicher.faktenspeicher (text, link, extra_text) VALUES ('{text_}', '{link_}', '{extra_text_}')")
-        self.con.commit()
-
-    def info_table(self):
-        self.cur.execute("CREATE SCHEMA IF NOT EXISTS faktenspeicher")
-        self.cur.execute("""
-                CREATE TABLE IF NOT EXISTS faktenspeicher.fakten (id SERIAL,
-                                                        text varchar(2000), 
-                                                        link varchar(2000),
-                                                        extra_text varchar(2000));
-            """)
-        self.con.commit()
+        line = pd.DataFrame({'text': [text_], 'link': [link_], 'extra_text': [extra_text_]})
+        line.to_sql("faktenspeicher.faktenspeicher", self.con, if_exists="append")
 
     def search(self, text_field):
-        data = self.cur.execute(f"""
+        frame = pd.read_sql(f"""
             SELECT text, link, extra_text FROM faktenspeicher.fakten 
             WHERE text like '%{text_field}%'
             ORDER BY id DESC 
-        """).fetchall()
-        frame = pd.DataFrame(data)
+        """, self.con)
         if not frame.empty:
             frame.rename(
                 columns={frame.columns[0]: 'Fakt', frame.columns[1]: 'Beweis', frame.columns[2]: 'Erläuterung'},
@@ -45,10 +34,14 @@ class Repository:
         return frame
 
     def open_db(self):
-        self.con = psycopg2.connect(host=self.host,
-                                    port=self.port,
-                                    dbname=self.dbname,
-                                    user=self.user,
-                                    password=self.password)
-        self.cur = self.con.cursor()
-        self.info_table()
+        self.con = self.get_engine()
+
+    def get_engine(self) -> sqlalchemy.engine:
+        pg_connection_dict = {
+            'dbname': self.dbname,
+            'user': self.user,
+            'password': self.password,
+            'port': self.port,
+            'host': self.host
+        }
+        return sqlalchemy.create_engine(**pg_connection_dict)
